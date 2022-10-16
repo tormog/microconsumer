@@ -14,9 +14,23 @@ TODO:
 - complete docker support including code base
 - separate producer/consumer in main file so you can run them as separate instances in separate containers
 
+## Test, build and run
+
+You can run this project locally if you have [GO installed](https://golang.org/doc/install).
+And run local docker containers of [MariaDB](https://github.com/tormog/microconsumer/tree/main/external/mariadb) and [Redis](https://github.com/tormog/microconsumer/tree/main/external/redis). 
+
+To test
+`go test ./...`
+
+To build and run 
+`go build -o microconsumer .` and `./microconsumer`
+
+Without build
+`go run .`
+
 Example output from program
 
-    bash-5.1$ go run main.go 
+    bash-5.1$ go run . 
     2022/10/16 16:05:02 Starting producers and consumers
     2022/10/16 16:05:12 in consumer cgriwwietx redis length:0
     2022/10/16 16:05:13 Producer ID iqeaoeywrw => NewestID:1581644123396018177 OldestID:1581556016776237056 NextToken:b26v89c19zqg8o3fpzejv6t8flbam47pf4qnyvu2w096l ResultCount:10

@@ -39,7 +39,6 @@ func getTwitterRecentData(bearerToken, nextToken, newestID, url, query string, h
 	}
 	q.Add("max_results", fmt.Sprintf("%d", hits))
 	req.URL.RawQuery = q.Encode()
-
 	http.DefaultClient.Do(req)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

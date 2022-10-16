@@ -5,12 +5,12 @@ import (
 )
 
 type RedisCache struct {
-	redis *rd.Client
+	*rd.Client
 }
 
 func NewCache() RedisCache {
 	return RedisCache{
-		redis: rd.NewClient(&rd.Options{
+		rd.NewClient(&rd.Options{
 			Addr:     "localhost:6379",
 			Password: "",
 			DB:       0,
@@ -19,18 +19,18 @@ func NewCache() RedisCache {
 }
 
 func (c *RedisCache) Length(key string) int64 {
-	return c.redis.LLen(key).Val()
+	return c.LLen(key).Val()
 }
 
 func (c *RedisCache) Push(key string, value interface{}) error {
-	if err := c.redis.RPush(key, value).Err(); err != nil {
+	if err := c.RPush(key, value).Err(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (c *RedisCache) Pop(key string) (string, error) {
-	result, err := c.redis.RPop(key).Result()
+	result, err := c.RPop(key).Result()
 	if err != nil {
 		return "", err
 	}
