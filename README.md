@@ -14,6 +14,19 @@ TODO:
 - complete docker support including code base
 - separate producer/consumer in main file so you can run them as separate instances in separate containers
 
+## Configuration
+
+This program has no command line interface. It only uses environment variables.
+Under you will see an example setup. The `TWITTER_BEARER_TOKEN` you will need to create yourself at developer.twitter.com. You can also increase the number of concurrent consumers by increasing the number for env variable `NUMBER_OF_CONSUMERS`. For test locally you will need to edit the file `.env.local` on the root of this project. 
+You can tweek/change the query by editing `TWITTER_SEARCH_QUERY` e.g. by changing to “ecommerce”.  
+
+    SQL_ENV=example_user:example_password@tcp(localhost:3306)/microblogger
+    REDIS_STORE_KEY_NAME=data
+    TWITTER_SEARCH_URL=https://api.twitter.com/2/tweets/search/recent
+    TWITTER_SEARCH_QUERY="(from:twitterdev -is:retweet) OR #twitterdev"
+    TWITTER_BEARER_TOKEN=
+    NUMBER_OF_CONSUMERS=1
+
 ## Test, build and run
 
 You can run this project locally if you have [GO installed](https://golang.org/doc/install).
