@@ -21,11 +21,14 @@ Under you will see an example setup. The `TWITTER_BEARER_TOKEN` you will need to
 You can tweek/change the query by editing `TWITTER_SEARCH_QUERY` e.g. by changing to “ecommerce”.  
 
     SQL_ENV=example_user:example_password@tcp(localhost:3306)/microblogger
-    REDIS_STORE_KEY_NAME=data
+    QUEUE_STORE_NAME=data
+    QUEUE_STORE_DL_NAME=dldata
     TWITTER_SEARCH_URL=https://api.twitter.com/2/tweets/search/recent
     TWITTER_SEARCH_QUERY="(from:twitterdev -is:retweet) OR #twitterdev"
     TWITTER_BEARER_TOKEN=
     NUMBER_OF_CONSUMERS=1
+
+`QUEUE_STORE_DL_NAME` will be the name of the redis store when data is pushed back if any failure in persisting.
 
 ## Test, build and run
 
