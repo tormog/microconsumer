@@ -1,11 +1,11 @@
 package main
 
 import (
-	tc "example/internal/consumers"
-	tp "example/internal/producers"
 	"fmt"
 	"log"
 	"math/rand"
+	tc "microconsumer/internal/consumers"
+	tp "microconsumer/internal/producers"
 	"os"
 	"strconv"
 	"sync"
@@ -55,7 +55,8 @@ func main() {
 		numConsumers = _consumers
 	}
 
-	redisStoreKeyName := os.Getenv("REDIS_STORE_KEY_NAME")
+	queueStoreName := os.Getenv("QUEUE_STORE_NAME")
+	queueStoreDLName := os.Getenv("QUEUE_STORE_DL_NAME")
 
 	log.Println("Starting producers and consumers")
 	var wg sync.WaitGroup
@@ -63,7 +64,7 @@ func main() {
 	go tp.ProducerService(&wg, newRandomName(10))
 	for i := 1; i <= numConsumers; i++ {
 		wg.Add(1)
-		go tc.ConsumerService(&wg, redisStoreKeyName, newRandomName(10), tc.SQLStore)
+		go tc.ConsumerService(&wg, queueStoreName, queueStoreDLName, newRandomName(10), tc.SQLStore)
 	}
 	wg.Wait()
 	log.Println("Main function done")

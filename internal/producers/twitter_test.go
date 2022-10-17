@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	ch "example/internal/cache"
+	ch "microconsumer/internal/queue"
 
 	"github.com/alicebob/miniredis"
 	"github.com/go-redis/redis"
@@ -37,21 +37,21 @@ func TestProduce(t *testing.T) {
 		Addr: mr.Addr(),
 	})
 	rdCache := ch.RedisCache{rdClient}
-	redisStore := "data"
+	queueStoreName := "data"
 
 	tws := twitterSource{
 		producerData: ProducerData{
-			cache:             rdCache,
-			redisStoreKeyName: redisStore,
-			resourceName:      "twitter",
-			producerID:        "someid",
+			queue:          rdCache,
+			queueStoreName: queueStoreName,
+			resourceName:   "twitter",
+			producerID:     "someid",
 		},
 		searchURL:   ts.URL,
 		searchQuery: "somequery",
 		bearerToken: "token",
 	}
 
-	assert.Equal(t, int64(0), rdCache.Length(redisStore))
+	assert.Equal(t, int64(0), rdCache.Length(queueStoreName))
 	tws.Produce("")
-	assert.Equal(t, int64(10), rdCache.Length(redisStore))
+	assert.Equal(t, int64(10), rdCache.Length(queueStoreName))
 }

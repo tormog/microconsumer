@@ -1,4 +1,4 @@
-package cache
+package queue
 
 import (
 	rd "github.com/go-redis/redis"
@@ -8,7 +8,7 @@ type RedisCache struct {
 	*rd.Client
 }
 
-func NewCache() RedisCache {
+func NewQueue() RedisCache {
 	return RedisCache{
 		rd.NewClient(&rd.Options{
 			Addr:     "localhost:6379",

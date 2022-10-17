@@ -1,7 +1,7 @@
 package consumers
 
 import (
-	ch "example/internal/cache"
+	ch "microconsumer/internal/queue"
 
 	"log"
 	"os"
@@ -23,22 +23,24 @@ type Consumer interface {
 }
 
 type ConsumerData struct {
-	cache             ch.RedisCache
-	redisStoreKeyName string
-	consumerID        string
+	queue            ch.RedisCache
+	queueStoreName   string
+	queueDLStoreName string
+	consumerID       string
 }
 
-func ConsumerService(wg *sync.WaitGroup, redisStoreKeyName, consumerID string, backend BackendType) error {
+func ConsumerService(wg *sync.WaitGroup, queueStoreName, queueDLStoreName, consumerID string, backend BackendType) error {
 	defer wg.Done()
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	cache := ch.NewCache()
+	queue := ch.NewQueue()
 	ticker := time.NewTicker(time.Second * time.Duration(10))
 
 	consumerData := ConsumerData{
-		cache:             cache,
-		redisStoreKeyName: redisStoreKeyName,
-		consumerID:        consumerID,
+		queue:            queue,
+		queueStoreName:   queueStoreName,
+		queueDLStoreName: queueDLStoreName,
+		consumerID:       consumerID,
 	}
 
 	for {

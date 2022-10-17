@@ -2,10 +2,10 @@ package producers
 
 import (
 	"encoding/json"
-	md "example/internal/models"
 	"fmt"
 	"io/ioutil"
 	"log"
+	md "microconsumer/internal/models"
 	"net/http"
 )
 
@@ -84,7 +84,7 @@ func (tw *twitterSource) Produce(fromID string) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			tw.producerData.cache.Push(tw.producerData.redisStoreKeyName, bytes)
+			tw.producerData.queue.Push(tw.producerData.queueStoreName, bytes)
 			log.Printf("Producer ID %s pushed twitter id:%s\n", tw.producerData.producerID, field.ID)
 		}
 		if data.Meta.NextToken != "" {

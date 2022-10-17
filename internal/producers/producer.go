@@ -1,8 +1,8 @@
 package producers
 
 import (
-	ch "example/internal/cache"
 	"log"
+	ch "microconsumer/internal/queue"
 	"os"
 	"os/signal"
 	"sync"
@@ -15,10 +15,10 @@ type Producer interface {
 }
 
 type ProducerData struct {
-	cache             ch.RedisCache
-	redisStoreKeyName string
-	resourceName      string
-	producerID        string
+	queue          ch.RedisCache
+	queueStoreName string
+	resourceName   string
+	producerID     string
 }
 
 func ProducerService(wg *sync.WaitGroup, producerID string) error {
@@ -29,10 +29,10 @@ func ProducerService(wg *sync.WaitGroup, producerID string) error {
 
 	tws := &twitterSource{
 		producerData: ProducerData{
-			cache:             ch.NewCache(),
-			redisStoreKeyName: os.Getenv("REDIS_STORE_KEY_NAME"),
-			resourceName:      os.Getenv("TWITTER_RESOURCE_NAME"),
-			producerID:        producerID,
+			queue:          ch.NewQueue(),
+			queueStoreName: os.Getenv("QUEUE_STORE_NAME"),
+			resourceName:   os.Getenv("TWITTER_RESOURCE_NAME"),
+			producerID:     producerID,
 		},
 		searchURL:   os.Getenv("TWITTER_SEARCH_URL"),
 		searchQuery: os.Getenv("TWITTER_SEARCH_QUERY"),

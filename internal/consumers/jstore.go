@@ -2,9 +2,9 @@ package consumers
 
 import (
 	"encoding/json"
-	md "example/internal/models"
-	dt "example/internal/storage"
 	"log"
+	md "microconsumer/internal/models"
+	dt "microconsumer/internal/storage"
 )
 
 type jStoreBackend struct {
@@ -20,11 +20,11 @@ func closeJStoreStorage(mStores map[string]dt.Storage) {
 }
 
 func (jStore *jStoreBackend) Consume() error {
-	log.Printf("redis length:%v\n", jStore.cache.Length(jStore.redisStoreKeyName))
+	log.Printf("redis length:%v\n", jStore.queue.Length(jStore.queueStoreName))
 	mStore := map[string]dt.Storage{}
 	defer closeJStoreStorage(mStore)
-	for jStore.cache.Length(jStore.redisStoreKeyName) > 0 {
-		result, err := jStore.cache.Pop(jStore.redisStoreKeyName)
+	for jStore.queue.Length(jStore.queueStoreName) > 0 {
+		result, err := jStore.queue.Pop(jStore.queueStoreName)
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,12 @@ func (jStore *jStoreBackend) Consume() error {
 			mStore[redisData.Type] = dt.NewJSONStorage(redisData.Type + ".json.gz")
 		}
 		store := mStore[redisData.Type]
-		store.PersistData(redisData.ID, redisData.Type, redisData.Data)
+		if err := store.PersistData(redisData.ID, redisData.Type, redisData.Data); err != nil {
+			if err := jStore.queue.Push(jStore.queueDLStoreName, result); err != nil {
+				log.Printf("consumer %s push to DL queue %s failed:%v\n", jStore.consumerID, jStore.queueDLStoreName, err)
+			}
+			log.Fatalf("consumer %s insert error:%v\n", jStore.consumerID, err)
+		}
 		log.Printf("consumer %s consumed %s id:%s\n", jStore.consumerID, redisData.Type, redisData.ID)
 	}
 	return nil

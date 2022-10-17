@@ -1,4 +1,4 @@
-module example
+module microconsumer
 
 go 1.17
 
