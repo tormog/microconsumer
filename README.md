@@ -11,7 +11,6 @@ When both containers are running you need to edit the .env.local and change the 
 
 TODO:
 - add tests
-- complete docker support including code base
 - separate producer/consumer in main file so you can run them as separate instances in separate containers
 
 ## Configuration
