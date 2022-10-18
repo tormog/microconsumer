@@ -64,7 +64,7 @@ func (tw *twitterSource) Produce(fromID string) (string, error) {
 	for {
 		data, err := getTwitterRecentData(tw.bearerToken, nextToken, fromID, tw.searchURL, tw.searchQuery, 10)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("issues retrieving data from twitter:%v", err)
 		}
 		if data.Meta.ResultCount == 0 {
 			return fromID, nil
@@ -82,9 +82,11 @@ func (tw *twitterSource) Produce(fromID string) (string, error) {
 			}
 			bytes, err := json.Marshal(dataStore)
 			if err != nil {
-				return "", err
+				return "", fmt.Errorf("issues marshaling twitter data:%v", err)
 			}
-			tw.producerData.queue.Push(tw.producerData.queueStoreName, bytes)
+			if err := tw.producerData.queue.Push(tw.producerData.queueStoreName, bytes); err != nil {
+				return "", fmt.Errorf("could not push data from producer %s to queue:%v", tw.producerData.producerID, err)
+			}
 			log.Printf("Producer ID %s pushed twitter id:%s\n", tw.producerData.producerID, field.ID)
 		}
 		if data.Meta.NextToken != "" {

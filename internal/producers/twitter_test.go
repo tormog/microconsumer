@@ -15,6 +15,7 @@ import (
 )
 
 func TestProduce(t *testing.T) {
+
 	content, err := ioutil.ReadFile("../../test/twitter/twitter.json")
 	if err != nil {
 		t.Error(err)

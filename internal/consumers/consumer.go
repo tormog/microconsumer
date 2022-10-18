@@ -33,8 +33,12 @@ func ConsumerService(wg *sync.WaitGroup, queueStoreName, queueDLStoreName, consu
 	defer wg.Done()
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	queue := ch.NewQueue()
 	ticker := time.NewTicker(time.Second * time.Duration(10))
+
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+
+	queue := ch.NewQueue(redisHost, redisPort)
 
 	consumerData := ConsumerData{
 		queue:            queue,

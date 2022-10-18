@@ -27,9 +27,12 @@ func ProducerService(wg *sync.WaitGroup, producerID string) error {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	ticker := time.NewTicker(time.Second * time.Duration(10))
 
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+
 	tws := &twitterSource{
 		producerData: ProducerData{
-			queue:          ch.NewQueue(),
+			queue:          ch.NewQueue(redisHost, redisPort),
 			queueStoreName: os.Getenv("QUEUE_STORE_NAME"),
 			resourceName:   os.Getenv("TWITTER_RESOURCE_NAME"),
 			producerID:     producerID,

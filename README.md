@@ -32,8 +32,23 @@ You can tweek/change the query by editing `TWITTER_SEARCH_QUERY` e.g. by changin
 
 ## Test, build and run
 
-You can run this project locally if you have [GO installed](https://golang.org/doc/install).
-And run local docker containers of [MariaDB](https://github.com/tormog/microconsumer/tree/main/external/mariadb) and [Redis](https://github.com/tormog/microconsumer/tree/main/external/redis). 
+## prerequisite
+
+- [MariaDB](https://github.com/tormog/microconsumer/tree/main/external/mariadb).
+- [Redis setup](https://github.com/tormog/microconsumer/tree/main/external/redis)
+- [GO runtime](https://golang.org/doc/install)
+- [Docker runtime](https://docs.docker.com/engine/install/)
+- [Docker compose](https://docs.docker.com/compose/)
+
+### Using docker and docker-compose
+
+Test, build and create a docker image `docker build -t microconsumer .`
+
+Edit the file `.env.docker` and set correct `TWITTER_BEARER_TOKEN`
+
+To run start docker-compose `docker-compose up`
+
+### Running code from local machine
 
 To test
 `go test ./...`

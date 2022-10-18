@@ -2,6 +2,7 @@ package consumers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	md "microconsumer/internal/models"
 	dt "microconsumer/internal/storage"
@@ -39,9 +40,9 @@ func (jStore *jStoreBackend) Consume() error {
 		store := mStore[redisData.Type]
 		if err := store.PersistData(redisData.ID, redisData.Type, redisData.Data); err != nil {
 			if err := jStore.queue.Push(jStore.queueDLStoreName, result); err != nil {
-				log.Printf("consumer %s push to DL queue %s failed:%v\n", jStore.consumerID, jStore.queueDLStoreName, err)
+				return fmt.Errorf("consumer %s push to DL queue %s failed:%v", jStore.consumerID, jStore.queueDLStoreName, err)
 			}
-			log.Fatalf("consumer %s insert error:%v\n", jStore.consumerID, err)
+			return fmt.Errorf("consumer %s persistData error:%v", jStore.consumerID, err)
 		}
 		log.Printf("consumer %s consumed %s id:%s\n", jStore.consumerID, redisData.Type, redisData.ID)
 	}

@@ -1,6 +1,8 @@
 package queue
 
 import (
+	"fmt"
+
 	rd "github.com/go-redis/redis"
 )
 
@@ -8,10 +10,10 @@ type RedisCache struct {
 	*rd.Client
 }
 
-func NewQueue() RedisCache {
+func NewQueue(host, port string) RedisCache {
 	return RedisCache{
 		rd.NewClient(&rd.Options{
-			Addr:     "localhost:6379",
+			Addr:     fmt.Sprintf("%s:%s", host, port),
 			Password: "",
 			DB:       0,
 		}),
